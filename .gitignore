@@ -1,0 +1,21 @@
+# Python virtual environment
+bin/
+lib/
+share/
+pyvenv.cfg
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# System/cache
+CACHEDIR.TAG
+.DS_Store
+
+# Optional: VSCode settings
+.vscode/
+
+# Optional: Python environment folders
+env/
+venv/
