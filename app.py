@@ -181,10 +181,6 @@ def upload_image():
 
     # image = image.resize(new_size, Image.LANCZOS)
 
-    reader = easyocr.Reader(["en", "az"], model_storage_directory='model')
-
-    translator = GoogleTranslator(source="en", target="az")
-
     img_np = np.array(image)
 
     extracted_text_boxes = perform_ocr(img_np, reader)
