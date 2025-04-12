@@ -4,6 +4,7 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 from deep_translator import GoogleTranslator
 import os, easyocr
+import numpy as np
 
 app = Flask(__name__)
 
@@ -124,9 +125,7 @@ def get_text_fill_color(background_color):
         return "white"
 
 
-def replace_text_with_translation(image_path, translated_texts, text_boxes):
-    image = Image.open(image_path)
-
+def replace_text_with_translation(image, translated_texts, text_boxes):
     draw = ImageDraw.Draw(image)
 
     font = ImageFont.load_default()
@@ -175,59 +174,36 @@ def upload_image():
         return "No file uploaded", 400
 
     file = request.files['file']
-    
-    file_path = os.path.join(UPLOAD_FOLDER, "image.png")
 
-    image = Image.open(file)
-    
-    image = image.rotate(180)
-    
-    new_size = (240, 240) 
-    
-    image = image.resize(new_size, Image.LANCZOS)
-    
-    image.save(file_path)
+    image = Image.open(file.stream)
+
+    # new_size = (240, 240)
+
+    # image = image.resize(new_size, Image.LANCZOS)
 
     reader = easyocr.Reader(["en", "az"], model_storage_directory='model')
 
     translator = GoogleTranslator(source="en", target="az")
 
-    input_folder = "input"
+    img_np = np.array(image)
 
-    output_folder = "static"
+    extracted_text_boxes = perform_ocr(img_np, reader)
 
-    image_files = os.listdir(input_folder)
-    
-    filename = image_files[0]
-
-    print(f'[INFO] Processing {filename}...')
-    
-    image_path = os.path.join(input_folder, filename)
-    
-    extracted_text_boxes = perform_ocr(image_path, reader)
-    
     translated_texts = []
-    
     for text_box, text in extracted_text_boxes:
         translated_texts.append(translator.translate(text))
-    
-    image = replace_text_with_translation(image_path, translated_texts, extracted_text_boxes)
-    
-    base_filename, extension = os.path.splitext(filename)
-    
-    output_filename = f"image.bmp"
-    
-    output_path = os.path.join(output_folder, output_filename)
-    
+
+    image = replace_text_with_translation(image, translated_texts, extracted_text_boxes)
+
     image = image.convert('RGB')
-    
-    image = image.rotate(180)
-    
-    image.save(output_path)
-    
-    print(f'[INFO] Saved as {output_filename}...')
-    
-    return "Image received successfully", 200
+
+    img_byte_arr = io.BytesIO()
+
+    image.save(img_byte_arr, format='BMP')
+
+    img_byte_arr.seek(0)
+
+    return send_file(img_byte_arr, mimetype='image/bmp')
 
 @app.route('/')
 def index():
