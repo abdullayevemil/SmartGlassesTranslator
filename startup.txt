@@ -1,0 +1,9 @@
+git pull https://github.com/abdullayevemil/SmartGlassesTranslator
+
+cd SmartGlassesTranslator
+
+pip install -r requirements.txt
+
+python app.py &
+
+ngrok http --url=nicely-kind-sunbeam.ngrok-free.app 10000 &
