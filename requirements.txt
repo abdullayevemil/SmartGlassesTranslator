@@ -3,3 +3,5 @@ Pillow
 deep-translator
 easyocr
 torch
+pyngrok
+waitress
