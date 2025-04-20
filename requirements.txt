@@ -5,3 +5,4 @@ easyocr
 torch
 pyngrok
 waitress
+logging
