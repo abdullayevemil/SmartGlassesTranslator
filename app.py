@@ -158,5 +158,5 @@ def get_next_step():
 if __name__ == '__main__':
     # public_url = ngrok.connect(10000)
     # print("Public URL:", public_url)
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get("PORT", 8080))
     serve(app, host="0.0.0.0", port=port, threads=4)
