@@ -6,7 +6,7 @@ import os, easyocr
 import numpy as np
 import requests
 import re
-from pyngrok import ngrok
+# from pyngrok import ngrok
 from waitress import serve
 
 def strip_html(text):
@@ -156,7 +156,7 @@ def get_next_step():
     return jsonify({"direction": last_direction_text})
 
 if __name__ == '__main__':
-    public_url = ngrok.connect(10000)
-    print("Public URL:", public_url)
+    # public_url = ngrok.connect(10000)
+    # print("Public URL:", public_url)
     port = int(os.environ.get("PORT", 10000))
     serve(app, host="0.0.0.0", port=port, threads=4)
