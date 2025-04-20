@@ -4,6 +4,9 @@ cd SmartGlassesTranslator
 
 pip install -r requirements.txt
 
+lsof -i :10000  # Find the process using port 10000
+kill -9 <pid>   # Replace <pid> with the Process ID from the previous command
+
 python app.py &
 
 ngrok http --url=nicely-kind-sunbeam.ngrok-free.app 10000 &

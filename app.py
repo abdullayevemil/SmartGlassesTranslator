@@ -8,8 +8,6 @@ import requests
 import re
 # from pyngrok import ngrok
 from waitress import serve
-import logging
-logging.basicConfig(filename='logfile.txt', level=logging.INFO)
 
 def strip_html(text):
     return re.sub('<[^<]+?>', '', text)
@@ -70,18 +68,12 @@ def upload_image():
 
     file = request.files['file']
     
-    logging.info("File received: %s", file.filename)
-
     image = Image.open(file.stream)
-
-    logging.info("Image opened: %s", file.filename)
 
     width, height = image.size
 
     width, height = image.size
     
-    logging.info("Image size: %s x %s", width, height)
-
     new_height = width / 2 
 
     left = 0
@@ -98,17 +90,11 @@ def upload_image():
 
     extracted_text_boxes = perform_ocr(img_np, reader)
     
-    logging.info("Extracted text boxes: %s", extracted_text_boxes)
-
     translated_texts = []
     for text_box, text in extracted_text_boxes:
         translated_texts.append(translator.translate(text))
         
     coordinates = get_coordinates(translated_texts, extracted_text_boxes, width)
-    
-    logging.info("Coordinates: %s", coordinates)
-    
-    logging.info("Translated texts: %s", translated_texts)
     
     return jsonify({
         "coordinates": coordinates,
